@@ -11,7 +11,7 @@ import org.openmrs.module.initializer.api.CsvParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-@OpenmrsProfile(modules = { "cohort:3.2.* - 9.*" })
+@OpenmrsProfile(modules = { "cohort:3.5.0 - 9.*" })
 public class CohortAttributeTypeCsvParser extends CsvParser<CohortAttributeType, BaseLineProcessor<CohortAttributeType>> {
 	
 	private CohortService cohortService;
