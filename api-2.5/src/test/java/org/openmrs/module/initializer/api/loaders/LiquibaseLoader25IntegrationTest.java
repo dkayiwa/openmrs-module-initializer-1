@@ -73,6 +73,17 @@ public class LiquibaseLoader25IntegrationTest extends DomainBaseModuleContextSen
 	}
 	
 	@Test
+	public void load_shouldExecuteALoadDataChangeSet() throws Exception {
+		String relativePath = "liquibaseWithLoadData/liquibase.xml";
+		Assertions.assertNull(adminService.getGlobalProperty("test_load_data_1"));
+		Assertions.assertNull(adminService.getGlobalProperty("test_load_data_2"));
+		loader.load(new File(getAppDataDirPath() + relativePath));
+		Assertions.assertEquals(1, numChangeLogEntries(relativePath));
+		Assertions.assertEquals("loaded from a CSV file", adminService.getGlobalProperty("test_load_data_1"));
+		Assertions.assertEquals("also loaded", adminService.getGlobalProperty("test_load_data_2"));
+	}
+	
+	@Test
 	public void load_shouldUpdateAbsolutePathToRelativePathIfNeeded() {
 		String relativePath = "configuration/liquibase/liquibase.xml";
 		String absolutePath = getAppDataDirPath() + relativePath;

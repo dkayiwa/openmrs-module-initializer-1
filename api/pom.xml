@@ -21,12 +21,14 @@
             <version>1.9</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Provided by Platform 3.0 through Liquibase. Keep core's version: with an older one Liquibase cannot run loadData in the tests -->
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>4.5</version>
+            <version>5.11</version>
+            <scope>provided</scope>
             <exclusions>
-                <!-- Provided by Platform 3.0, bundling them in the omod would shadow core's copies -->
+                <!-- So that the classpath gets core's versions of these rather than opencsv's -->
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
                     <artifactId>commons-lang3</artifactId>
