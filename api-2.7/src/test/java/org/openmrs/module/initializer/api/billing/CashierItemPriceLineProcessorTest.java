@@ -31,29 +31,29 @@ import org.openmrs.module.stockmanagement.api.StockManagementService;
 import org.openmrs.module.stockmanagement.api.model.StockItem;
 
 public class CashierItemPriceLineProcessorTest {
-
+	
 	private static final String PAYMENT_MODE_UUID = "pm-0000-0000-0000-000000000001";
-
+	
 	private static final String STOCK_ITEM_UUID = "si-0000-0000-0000-000000000001";
-
+	
 	private static final String BILLABLE_SERVICE_UUID = "bs-0000-0000-0000-000000000001";
-
+	
 	private static final String[] HEADERS = new String[] { "Uuid", "name", "price", "payment mode", "stock item",
 	        "billable service" };
-
+	
 	@Mock
 	private PaymentModeService paymentModeService;
-
+	
 	@Mock
 	private StockManagementService stockManagementService;
-
+	
 	@Mock
 	private BillableServiceService billableServiceService;
-
+	
 	private CashierItemPriceLineProcessor processor;
-
+	
 	private PaymentMode paymentMode;
-
+	
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
@@ -62,74 +62,74 @@ public class CashierItemPriceLineProcessorTest {
 		paymentMode.setUuid(PAYMENT_MODE_UUID);
 		when(paymentModeService.getPaymentModeByUuid(PAYMENT_MODE_UUID)).thenReturn(paymentMode);
 	}
-
+	
 	@Test
 	public void fill_shouldClearBillableServiceWhenSwitchingToStockItem() {
 		CashierItemPrice instance = new CashierItemPrice();
 		BillableService existing = new BillableService();
 		existing.setUuid(BILLABLE_SERVICE_UUID);
 		instance.setBillableService(existing);
-
+		
 		StockItem stockItem = new StockItem();
 		stockItem.setUuid(STOCK_ITEM_UUID);
 		when(stockManagementService.getStockItemByUuid(STOCK_ITEM_UUID)).thenReturn(stockItem);
-
+		
 		CsvLine line = new CsvLine(HEADERS,
 		        new String[] { "", "Switched Price", "100.00", PAYMENT_MODE_UUID, STOCK_ITEM_UUID, "" });
-
+		
 		processor.fill(instance, line);
-
+		
 		assertSame(stockItem, instance.getItem());
 		assertNull(instance.getBillableService());
 	}
-
+	
 	@Test
 	public void fill_shouldClearItemWhenSwitchingToBillableService() {
 		CashierItemPrice instance = new CashierItemPrice();
 		StockItem existing = new StockItem();
 		existing.setUuid(STOCK_ITEM_UUID);
 		instance.setItem(existing);
-
+		
 		BillableService billableService = new BillableService();
 		billableService.setUuid(BILLABLE_SERVICE_UUID);
 		when(billableServiceService.getBillableServiceByUuid(BILLABLE_SERVICE_UUID)).thenReturn(billableService);
-
+		
 		CsvLine line = new CsvLine(HEADERS,
 		        new String[] { "", "Switched Price", "100.00", PAYMENT_MODE_UUID, "", BILLABLE_SERVICE_UUID });
-
+		
 		processor.fill(instance, line);
-
+		
 		assertSame(billableService, instance.getBillableService());
 		assertNull(instance.getItem());
 	}
-
+	
 	@Test
 	public void fill_shouldSetBasicFields() {
 		CashierItemPrice instance = new CashierItemPrice();
 		BillableService billableService = new BillableService();
 		billableService.setUuid(BILLABLE_SERVICE_UUID);
 		when(billableServiceService.getBillableServiceByUuid(BILLABLE_SERVICE_UUID)).thenReturn(billableService);
-
+		
 		CsvLine line = new CsvLine(HEADERS,
 		        new String[] { "", "ANC Service Price", "150.00", PAYMENT_MODE_UUID, "", BILLABLE_SERVICE_UUID });
-
+		
 		processor.fill(instance, line);
-
+		
 		assertEquals("ANC Service Price", instance.getName());
 		assertEquals(new BigDecimal("150.00"), instance.getPrice());
 		assertSame(paymentMode, instance.getPaymentMode());
 	}
-
+	
 	@Test
 	public void fill_shouldRejectWhenBothAssociationsSet() {
 		assertThrows(IllegalArgumentException.class, () -> {
 			CashierItemPrice instance = new CashierItemPrice();
-			CsvLine line = new CsvLine(HEADERS, new String[] { "", "Price", "100.00", PAYMENT_MODE_UUID, STOCK_ITEM_UUID,
-			        BILLABLE_SERVICE_UUID });
+			CsvLine line = new CsvLine(HEADERS,
+			        new String[] { "", "Price", "100.00", PAYMENT_MODE_UUID, STOCK_ITEM_UUID, BILLABLE_SERVICE_UUID });
 			processor.fill(instance, line);
 		});
 	}
-
+	
 	@Test
 	public void fill_shouldRejectWhenNeitherAssociationSet() {
 		assertThrows(IllegalArgumentException.class, () -> {

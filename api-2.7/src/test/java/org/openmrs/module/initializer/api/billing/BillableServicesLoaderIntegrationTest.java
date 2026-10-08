@@ -77,8 +77,8 @@ public class BillableServicesLoaderIntegrationTest extends DomainBaseModuleConte
 			Assertions.assertNotNull(service);
 			Assertions.assertNotNull(service.getServiceType());
 			Assertions.assertEquals("Antenatal Care", service.getName());
-			Assertions.assertEquals(conceptService.getConceptByUuid("d4b4b6ef-6f3e-43a4-a3b9-9c56f3a1e2d8").getId(), service
-			        .getConcept().getId());
+			Assertions.assertEquals(conceptService.getConceptByUuid("d4b4b6ef-6f3e-43a4-a3b9-9c56f3a1e2d8").getId(),
+			    service.getConcept().getId());
 			Assertions.assertEquals(BillableServiceStatus.ENABLED, service.getServiceStatus());
 		}
 		
@@ -89,8 +89,8 @@ public class BillableServicesLoaderIntegrationTest extends DomainBaseModuleConte
 			Assertions.assertNotNull(service);
 			Assertions.assertNotNull(service.getServiceType());
 			Assertions.assertEquals("Orthopedic Modified", service.getName());
-			Assertions.assertEquals(conceptService.getConceptByUuid("3f6f6c92-8d5c-4a9e-bb1c-d3e00e4f8b71").getId(), service
-			        .getConcept().getId());
+			Assertions.assertEquals(conceptService.getConceptByUuid("3f6f6c92-8d5c-4a9e-bb1c-d3e00e4f8b71").getId(),
+			    service.getConcept().getId());
 			Assertions.assertEquals(BillableServiceStatus.DISABLED, service.getServiceStatus());
 		}
 		

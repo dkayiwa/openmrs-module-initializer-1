@@ -47,8 +47,9 @@ public class BillableServicesLineProcessor extends BaseLineProcessor<BillableSer
 		billableService.setServiceType(Utils.fetchConcept(serviceType, conceptService));
 		
 		String serviceStatus = line.getString(HEADER_SERVICE_STATUS);
-		billableService.setServiceStatus(StringUtils.isNotBlank(serviceStatus) ? BillableServiceStatus.valueOf(serviceStatus
-		        .toUpperCase()) : BillableServiceStatus.ENABLED);
+		billableService.setServiceStatus(
+		    StringUtils.isNotBlank(serviceStatus) ? BillableServiceStatus.valueOf(serviceStatus.toUpperCase())
+		            : BillableServiceStatus.ENABLED);
 		
 		return billableService;
 	}

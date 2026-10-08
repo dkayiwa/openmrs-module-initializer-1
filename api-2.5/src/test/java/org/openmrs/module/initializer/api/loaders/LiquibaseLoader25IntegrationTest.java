@@ -20,6 +20,7 @@ import org.openmrs.util.OpenmrsClassLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -59,6 +60,16 @@ public class LiquibaseLoader25IntegrationTest extends DomainBaseModuleContextSen
 		Assertions.assertEquals(2, numChangeLogEntries(relativePath));
 		Assertions.assertEquals("true", adminService.getGlobalProperty("test_changes_1"));
 		Assertions.assertEquals("true", adminService.getGlobalProperty("test_changes_2"));
+	}
+	
+	@Test
+	public void load_shouldRefreshGlobalPropertiesWrittenBeforeAChangeSetFails() {
+		String relativePath = "liquibaseWithAFailingChangeSet/liquibase.xml";
+		File changelog = new File(getAppDataDirPath() + relativePath);
+		Assertions.assertNull(adminService.getGlobalProperty("test_changes_before_failure"));
+		Assertions.assertThrows(Exception.class, () -> loader.load(changelog));
+		Assertions.assertEquals(1, numChangeLogEntries(relativePath));
+		Assertions.assertEquals("true", adminService.getGlobalProperty("test_changes_before_failure"));
 	}
 	
 	@Test
