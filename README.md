@@ -239,7 +239,7 @@ See the [documentation on Initializer's logging properties](readme/rtprops.md#lo
 ## Releases notes
 #### version 3.0.0
 * Requires OpenMRS Core 3.0.0 and Java 21. Initializer 2.x releases remain the ones for OpenMRS Core 2.x.
-* Boolean CSV columns now read `1` as true, as the `Void/Retire` column already did. They used to read it as false.
+* Most boolean CSV columns, `Void/Retire` included, and the `initializer.skip.checksums` and `initializer.row.checksums.enabled` properties now read `1` as true. Initializer 2.x read it as false.
 * The [Initializer Validator](readme/validator.md) is not available for this version yet and remains on the 2.x line.
 
 #### version 2.12.1
