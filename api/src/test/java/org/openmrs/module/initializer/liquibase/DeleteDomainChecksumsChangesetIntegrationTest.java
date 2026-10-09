@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.util.Arrays;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openmrs.module.initializer.Domain;
@@ -33,6 +34,13 @@ public class DeleteDomainChecksumsChangesetIntegrationTest extends DomainBaseMod
 	@BeforeEach
 	public void setup() throws Exception {
 		loader.load();
+	}
+	
+	@AfterEach
+	public void deleteCommittedData() {
+		// The changeset commits the test's transaction, so without this the concepts loaded in setup would outlive the
+		// rollback and collide with the datasets of the test classes that run after this one
+		deleteAllData();
 	}
 	
 	@Test
